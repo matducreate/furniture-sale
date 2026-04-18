@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tokyo Moving Sale · Mathieu Dumont</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:       #F9F8F6;
+    --surface:  #FFFFFF;
+    --border:   #E8E4DE;
+    --text:     #1C1C1A;
+    --muted:    #8A8680;
+    --accent:   #2D5016;
+    --accent2:  #8BA888;
+    --warm:     #C8A96E;
+    --red:      #C0392B;
+    --yellow:   #E8A020;
+    --ff-head:  'Cormorant Garamond', serif;
+    --ff-body:  'DM Sans', sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--ff-body);
+    font-weight: 300;
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 40px;
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .logo {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+  .logo-title {
+    font-family: var(--ff-head);
+    font-size: 22px;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    color: var(--text);
+    line-height: 1;
+  }
+  .logo-sub {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    font-weight: 400;
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+  .item-count {
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+  }
+  .item-count span {
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    padding: 64px 40px 48px;
+    max-width: 900px;
+  }
+  .hero-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 500;
+    margin-bottom: 20px;
+  }
+  .hero-tag::before {
+    content: '';
+    width: 24px;
+    height: 1px;
+    background: var(--accent);
+  }
+  .hero h1 {
+    font-family: var(--ff-head);
+    font-size: clamp(36px, 5vw, 56px);
+    font-weight: 300;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    color: var(--text);
+    margin-bottom: 16px;
+  }
+  .hero h1 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+  .hero p {
+    font-size: 15px;
+    color: var(--muted);
+    line-height: 1.7;
+    max-width: 560px;
+  }
+  .hero-contact {
+    margin-top: 24px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .hero-contact a {
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px solid var(--accent2);
+    padding-bottom: 1px;
+  }
+
+  /* ── FILTERS ── */
+  .filters-bar {
+    padding: 0 40px 32px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .filter-btn {
+    font-family: var(--ff-body);
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 8px 18px;
+    border-radius: 100px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .filter-btn:hover {
+    border-color: var(--accent2);
+    color: var(--accent);
+  }
+  .filter-btn.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+  .filter-divider {
+    width: 1px;
+    height: 20px;
+    background: var(--border);
+    margin: 0 4px;
+  }
+  .status-filter {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-left: auto;
+  }
+  .toggle-sold {
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    user-select: none;
+  }
+  .toggle-sold input { display: none; }
+  .toggle-track {
+    width: 36px;
+    height: 20px;
+    border-radius: 10px;
+    background: var(--border);
+    position: relative;
+    transition: background 0.2s;
+  }
+  .toggle-track::after {
+    content: '';
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: white;
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    transition: transform 0.2s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+  }
+  .toggle-sold input:checked + .toggle-track { background: var(--accent); }
+  .toggle-sold input:checked + .toggle-track::after { transform: translateX(16px); }
+
+  /* ── GRID ── */
+  .grid {
+    padding: 0 40px 80px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
+  }
+
+  /* ── CARD ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    cursor: pointer;
+    animation: fadeUp 0.4s ease both;
+  }
+  .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.08);
+  }
+  .card.sold { opacity: 0.55; }
+  .card.hidden { display: none; }
+
+  .card-img {
+    position: relative;
+    aspect-ratio: 4/3;
+    overflow: hidden;
+    background: #F0EDE8;
+  }
+  .card-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+  }
+  .card:hover .card-img img { transform: scale(1.04); }
+  .card-img .no-img {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 48px;
+    opacity: 0.25;
+  }
+
+  .status-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 100px;
+  }
+  .status-badge.available { background: #E8F5E9; color: var(--accent); }
+  .status-badge.reserved  { background: #FFF8E1; color: var(--yellow); }
+  .status-badge.sold      { background: #FDECEA; color: var(--red); }
+
+  .cat-badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 100px;
+    background: rgba(255,255,255,0.92);
+    color: var(--muted);
+    backdrop-filter: blur(4px);
+  }
+
+  .card-body {
+    padding: 20px;
+  }
+  .card-name {
+    font-family: var(--ff-head);
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 1.2;
+    margin-bottom: 6px;
+    color: var(--text);
+  }
+  .card-desc {
+    font-size: 12.5px;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 16px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .card-prices {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .price-ask {
+    font-family: var(--ff-head);
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--text);
+  }
+  .price-orig {
+    font-size: 12px;
+    color: var(--muted);
+    text-decoration: line-through;
+  }
+  .price-saving {
+    font-size: 11px;
+    color: var(--accent);
+    font-weight: 500;
+    background: #E8F5E9;
+    padding: 2px 7px;
+    border-radius: 100px;
+  }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(28,28,26,0.6);
+    backdrop-filter: blur(4px);
+    z-index: 200;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: var(--surface);
+    border-radius: 16px;
+    width: 100%;
+    max-width: 820px;
+    max-height: 90vh;
+    overflow-y: auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    animation: modalIn 0.3s ease;
+  }
+
+  .modal-img {
+    aspect-ratio: 1;
+    background: #F0EDE8;
+    border-radius: 16px 0 0 16px;
+    overflow: hidden;
+  }
+  .modal-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .modal-img .no-img {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 64px;
+    opacity: 0.2;
+  }
+
+  .modal-content {
+    padding: 40px 36px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .modal-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted);
+    transition: all 0.15s;
+  }
+  .modal-close:hover { background: var(--bg); color: var(--text); }
+
+  .modal-cat {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent2);
+    font-weight: 500;
+  }
+  .modal-name {
+    font-family: var(--ff-head);
+    font-size: 32px;
+    font-weight: 300;
+    line-height: 1.1;
+    color: var(--text);
+  }
+  .modal-status { display: flex; align-items: center; gap: 8px; }
+  .modal-desc {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.75;
+  }
+  .modal-prices {
+    border-top: 1px solid var(--border);
+    padding-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .modal-price-ask {
+    font-family: var(--ff-head);
+    font-size: 36px;
+    font-weight: 400;
+    color: var(--text);
+  }
+  .modal-price-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .modal-contact {
+    margin-top: auto;
+    padding: 14px 20px;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-family: var(--ff-body);
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    transition: opacity 0.15s;
+    text-align: center;
+    text-decoration: none;
+    display: block;
+  }
+  .modal-contact:hover { opacity: 0.88; }
+  .modal-contact.disabled {
+    background: var(--border);
+    color: var(--muted);
+    cursor: default;
+  }
+
+  /* ── EMPTY STATE ── */
+  .empty {
+    grid-column: 1/-1;
+    padding: 80px 20px;
+    text-align: center;
+    color: var(--muted);
+    display: none;
+  }
+  .empty.visible { display: block; }
+  .empty-icon { font-size: 48px; margin-bottom: 16px; opacity: 0.3; }
+  .empty p { font-size: 14px; }
+
+  /* ── LOADING ── */
+  .loading {
+    grid-column: 1/-1;
+    padding: 80px 20px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 14px;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 24px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes modalIn {
+    from { opacity: 0; transform: scale(0.96); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+
+  @media (max-width: 640px) {
+    header { padding: 0 20px; }
+    .hero, .filters-bar, .grid { padding-left: 20px; padding-right: 20px; }
+    .grid { grid-template-columns: 1fr 1fr; gap: 16px; }
+    .modal { grid-template-columns: 1fr; }
+    .modal-img { border-radius: 16px 16px 0 0; aspect-ratio: 16/9; }
+    .modal-content { padding: 24px 20px; }
+    footer { flex-direction: column; gap: 8px; text-align: center; }
+  }
+
+  @media (max-width: 400px) {
+    .grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <span class="logo-title">Tokyo Moving Sale</span>
+    <span class="logo-sub">Mathieu Dumont · Tokyo → Los Angeles</span>
+  </div>
+  <div class="header-right">
+    <span class="item-count"><span id="visibleCount">—</span> items available</span>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-tag">Moving Sale</div>
+  <h1>Quality pieces,<br><em>ready for a new home.</em></h1>
+  <p>Relocating from Tokyo to Los Angeles in August 2026. Everything listed is in excellent condition and priced to sell. Pickup in Tokyo.</p>
+  <p class="hero-contact">Questions? <a href="mailto:contact@mdumont.ca">contact@mdumont.ca</a></p>
+</section>
+
+<div class="filters-bar" id="filtersBar">
+  <button class="filter-btn active" data-cat="all" onclick="filterCat(this)">All</button>
+  <!-- Category buttons injected dynamically -->
+  <div class="filter-divider"></div>
+  <label class="toggle-sold">
+    <input type="checkbox" id="showSold" onchange="toggleSold()">
+    <div class="toggle-track"></div>
+    Show sold
+  </label>
+</div>
+
+<div class="grid" id="grid">
+  <div class="loading">Loading items…</div>
+</div>
+
+<footer>
+  <span>Tokyo, Japan · 2026</span>
+  <span>Pickup only · Cash or bank transfer</span>
+</footer>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal" id="modal" style="position:relative">
+    <button class="modal-close" onclick="closeModalBtn()">✕</button>
+    <div class="modal-img" id="modalImg"></div>
+    <div class="modal-content" id="modalContent"></div>
+  </div>
+</div>
+
+<script>
+// ── CONFIG ──
+// Replace with your Google Sheet ID (must be published to web)
+const SHEET_ID  = '2PACX-1vSmaUbNmR5LkCJhVwbkgKrJPFaiOkRHs7WSzHDt64XmyuvOQJZ1esQZKHpWydBIC6sFsvZelumgu0d_';
+const SHEET_TAB = 'Items'; // Tab name in your sheet
+
+// ── STATE ──
+let allItems     = [];
+let activeCat    = 'all';
+let showSoldFlag = false;
+
+const CATEGORY_ICONS = {
+  'Electronics':  '📺',
+  'Appliance':    '🔌',
+  'Furniture':    '🛋️',
+  'Bike':         '🚲',
+  'Clothing':     '👕',
+  'Kitchen':      '🍳',
+  'Sport':        '🏃',
+  'Other':        '📦',
+};
+
+// ── FETCH DATA from Google Sheets ──
+async function loadItems() {
+  try {
+    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_TAB)}`;
+    const res  = await fetch(url);
+    const text = await res.text();
+    // Google wraps response in /*O_o*/ callback
+    const json = JSON.parse(text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/)[1]);
+    const rows  = json.table.rows;
+    const cols  = json.table.cols.map(c => c.label);
+
+    allItems = rows.map(row => {
+      const obj = {};
+      cols.forEach((col, i) => {
+        obj[col] = row.c[i]?.v ?? '';
+      });
+      return obj;
+    }).filter(item => item.Name); // skip empty rows
+
+    renderCategories();
+    renderGrid();
+  } catch (err) {
+    document.getElementById('grid').innerHTML =
+      `<div class="loading" style="color:#C0392B">Failed to load items. Make sure the Google Sheet is published to the web.</div>`;
+  }
+}
+
+// ── RENDER CATEGORY FILTERS ──
+function renderCategories() {
+  const cats = [...new Set(allItems.map(i => i.Category).filter(Boolean))];
+  const bar  = document.getElementById('filtersBar');
+  const divider = bar.querySelector('.filter-divider');
+
+  cats.forEach(cat => {
+    const btn = document.createElement('button');
+    btn.className = 'filter-btn';
+    btn.dataset.cat = cat;
+    btn.textContent = cat;
+    btn.onclick = () => filterCat(btn);
+    bar.insertBefore(btn, divider);
+  });
+}
+
+// ── RENDER GRID ──
+function renderGrid() {
+  const grid = document.getElementById('grid');
+  const filtered = allItems.filter(item => {
+    const catOk    = activeCat === 'all' || item.Category === activeCat;
+    const statusOk = showSoldFlag || item.Status?.toLowerCase() !== 'sold';
+    return catOk && statusOk;
+  });
+
+  const available = allItems.filter(i => i.Status?.toLowerCase() === 'available').length;
+  document.getElementById('visibleCount').textContent = available;
+
+  if (filtered.length === 0) {
+    grid.innerHTML = `<div class="empty visible"><div class="empty-icon">🔍</div><p>No items match this filter.</p></div>`;
+    return;
+  }
+
+  grid.innerHTML = filtered.map((item, idx) => {
+    const status  = (item.Status || 'available').toLowerCase();
+    const saving  = item['New Price'] && item['Asking Price']
+      ? Math.round((1 - item['Asking Price'] / item['New Price']) * 100)
+      : null;
+    const icon    = CATEGORY_ICONS[item.Category] || '📦';
+
+    return `
+      <div class="card ${status}" style="animation-delay:${idx * 0.05}s" onclick="openModal(${allItems.indexOf(item)})">
+        <div class="card-img">
+          ${item['Photo URL']
+            ? `<img src="${item['Photo URL']}" alt="${item.Name}" loading="lazy">`
+            : `<div class="no-img">${icon}</div>`}
+          <span class="status-badge ${status}">${item.Status || 'Available'}</span>
+          ${item.Category ? `<span class="cat-badge">${item.Category}</span>` : ''}
+        </div>
+        <div class="card-body">
+          <div class="card-name">${item.Name}</div>
+          <div class="card-desc">${item.Description || ''}</div>
+          <div class="card-prices">
+            <span class="price-ask">¥${Number(item['Asking Price']).toLocaleString()}</span>
+            ${item['New Price'] ? `<span class="price-orig">¥${Number(item['New Price']).toLocaleString()}</span>` : ''}
+            ${saving && saving > 0 ? `<span class="price-saving">-${saving}%</span>` : ''}
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+// ── FILTER ──
+function filterCat(btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  activeCat = btn.dataset.cat;
+  renderGrid();
+}
+
+function toggleSold() {
+  showSoldFlag = document.getElementById('showSold').checked;
+  renderGrid();
+}
+
+// ── MODAL ──
+function openModal(idx) {
+  const item   = allItems[idx];
+  const status = (item.Status || 'available').toLowerCase();
+  const saving = item['New Price'] && item['Asking Price']
+    ? Math.round((1 - item['Asking Price'] / item['New Price']) * 100)
+    : null;
+  const icon = CATEGORY_ICONS[item.Category] || '📦';
+  const isSold = status === 'sold';
+  const isReserved = status === 'reserved';
+
+  document.getElementById('modalImg').innerHTML = item['Photo URL']
+    ? `<img src="${item['Photo URL']}" alt="${item.Name}">`
+    : `<div class="no-img">${icon}</div>`;
+
+  document.getElementById('modalContent').innerHTML = `
+    <div>
+      ${item.Category ? `<div class="modal-cat">${item.Category}</div>` : ''}
+      <div class="modal-name">${item.Name}</div>
+    </div>
+    <div class="modal-status">
+      <span class="status-badge ${status}" style="position:static">${item.Status || 'Available'}</span>
+    </div>
+    ${item.Description ? `<div class="modal-desc">${item.Description}</div>` : ''}
+    ${item.Specs ? `<div class="modal-desc" style="font-size:12px"><strong>Specs:</strong> ${item.Specs}</div>` : ''}
+    <div class="modal-prices">
+      <div class="modal-price-ask">¥${Number(item['Asking Price']).toLocaleString()}</div>
+      <div class="modal-price-row">
+        ${item['New Price'] ? `<span class="price-orig">New: ¥${Number(item['New Price']).toLocaleString()}</span>` : ''}
+        ${saving && saving > 0 ? `<span class="price-saving">Save ${saving}%</span>` : ''}
+      </div>
+    </div>
+    ${!isSold
+      ? `<a href="mailto:contact@mdumont.ca?subject=Interested in: ${encodeURIComponent(item.Name)}&body=Hi Mathieu,%0D%0A%0D%0AI'm interested in the ${encodeURIComponent(item.Name)} listed at ¥${Number(item['Asking Price']).toLocaleString()}.%0D%0A%0D%0A" class="modal-contact ${isReserved ? 'disabled' : ''}">${isReserved ? 'Currently Reserved' : 'Contact to Purchase'}</a>`
+      : `<div class="modal-contact disabled">This item has been sold</div>`}
+  `;
+
+  document.getElementById('modalOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal(e) {
+  if (e.target === document.getElementById('modalOverlay')) closeModalBtn();
+}
+function closeModalBtn() {
+  document.getElementById('modalOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModalBtn(); });
+
+// ── INIT ──
+loadItems();
+</script>
+</body>
+</html>
