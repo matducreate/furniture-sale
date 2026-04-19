@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tokyo Moving Sale · Mathieu Dumont</title>
+<title>Tokyo Moving Sale ·</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
@@ -164,8 +164,8 @@
 
 <header>
   <div class="logo">
-    <span class="logo-title">Tokyo Moving Sale</span>
-    <span class="logo-sub">Mathieu Dumont · Tokyo → Los Angeles</span>
+    <span class="logo-title">We are moving</span>
+    <span class="logo-sub"> Tokyo → Los Angeles</span>
   </div>
   <div class="header-right">
     <span class="item-count"><span id="visibleCount">—</span> items available</span>
@@ -367,6 +367,11 @@ function openModal(idx) {
         ${saving && saving > 0 ? `<span class="price-saving">Save ${saving}%</span>` : ''}
       </div>
     </div>
+    ${item['Product URL'] ? `
+  <a href="${item['Product URL']}" target="_blank" class="modal-contact"
+     style="background:transparent;border:1px solid var(--border);color:var(--text)">
+    More Info ↗
+  </a>` : ''}
     ${!isSold
       ? `<a href="mailto:contact@mdumont.ca?subject=Interested in: ${encodeURIComponent(item.Name)}&body=Hi Mathieu,%0D%0A%0D%0AI'm interested in the ${encodeURIComponent(item.Name)} listed at ¥${Number(item['Asking Price']).toLocaleString()}.%0D%0A%0D%0A" class="modal-contact ${isRes ? 'disabled' : ''}">${isRes ? 'Currently Reserved' : 'Contact to Purchase'}</a>`
       : `<div class="modal-contact disabled">This item has been sold</div>`}
