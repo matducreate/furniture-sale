@@ -373,7 +373,7 @@ function openModal(idx) {
     More Info ↗
   </a>` : ''}
     ${!isSold
-      ? `<a href="mailto:contact@mdumont.ca?subject=Interested in: ${encodeURIComponent(item.Name)}&body=Hi Mathieu,%0D%0A%0D%0AI'm interested in the ${encodeURIComponent(item.Name)} listed at ¥${Number(item['Asking Price']).toLocaleString()}.%0D%0A%0D%0A" class="modal-contact ${isRes ? 'disabled' : ''}">${isRes ? 'Currently Reserved' : 'Contact to Purchase'}</a>`
+      ? `<a href="mailto:mathieu@mdumont.ca?subject=Interested in: ${encodeURIComponent(item.Name)}&body=Hi Mathieu,%0D%0A%0D%0AI'm interested in the ${encodeURIComponent(item.Name)} listed at ¥${Number(item['Asking Price']).toLocaleString()}.%0D%0A%0D%0A" class="modal-contact ${isRes ? 'disabled' : ''}">${isRes ? 'Currently Reserved' : 'Contact to Purchase'}</a>`
       : `<div class="modal-contact disabled">This item has been sold</div>`}
   `;
 
